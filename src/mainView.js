@@ -10,6 +10,7 @@ import {
     Text
 } from 'react-native';
 import Event from './Components/event';
+import Timetable from './Components/timetable';
 
 export default class Main extends React.Component {
 
@@ -17,6 +18,7 @@ export default class Main extends React.Component {
         super(props);
         this.state = {
             eventResponse: '',
+            timetableResponse: '',
             refreshing: false
         };
 
@@ -72,6 +74,9 @@ export default class Main extends React.Component {
         this.getEvents().then((response) => {
             this.setState({refreshing: false, eventResponse: response});
         });
+        this.getTimetable().then((response) => {
+            this.setState({refreshing: false, timetableResponse: response});
+        });
     }
 
     async getEvents(){
@@ -82,14 +87,33 @@ export default class Main extends React.Component {
         return responseJson;
     }
 
+    async getTimetable(){
+        const dateDay = (new Date()).getDay()-1;
+        const packet = {};
+        packet['day'] = dateDay.toString();
+        let response = await fetch(
+            'http://185.234.72.120:18000/todaysTimetable',
+            {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(packet)
+            }
+        );
+        let responseJson = await response.json();
+        return responseJson;
+    }
+
     render() {
         // Generate event Components
-        let textElements = [];
+        let eventElements = [];
         for(let i = 0; i < this.state.eventResponse.length; i++){
-            textElements.push(<Event key={i} event={this.state.eventResponse[i].text}></Event>);
+            eventElements.push(<Event key={i} event={this.state.eventResponse[i].text}></Event>);
         }
-        if(textElements.length === 0){
-            textElements[0] = <Text key={0} style={{fontSize: 30}}>Keine Events</Text>;
+        // Display error if no Events found
+        if(eventElements.length === 0){
+            eventElements[0] = <Text key={0} style={{fontSize: 30}}>Keine Events</Text>;
         }
 
         return (
@@ -98,9 +122,12 @@ export default class Main extends React.Component {
                     <View style={this.styles.header} />
                     <View style={this.styles.element}>
                         <Text style={{fontSize: 40, marginBottom: 10}} >Events</Text>
-                        {textElements}
+                        {eventElements}
                     </View>
-                    <View style={this.styles.element} />
+                    <View style={this.styles.element}>
+                        <Text style={{fontSize: 40, marginBottom: 10}} >Programm</Text>
+                        <Timetable timetable={this.state.timetableResponse}/>
+                    </View>
                     <View style={this.styles.element} />
                     <View style={this.styles.element} />
                     <View style={this.styles.element} />
