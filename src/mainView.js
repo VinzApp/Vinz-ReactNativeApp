@@ -83,13 +83,15 @@ export default class Main extends React.Component {
     }
 
     render() {
+        // Generate event Components
         let textElements = [];
         for(let i = 0; i < this.state.eventResponse.length; i++){
-            textElements.push(<Event event={this.state.eventResponse[i].text}></Event>);
+            textElements.push(<Event key={i} event={this.state.eventResponse[i].text}></Event>);
         }
         if(textElements.length === 0){
-            textElements[0] = <Text style={{fontSize: 30}}>Keine Events</Text>;
+            textElements[0] = <Text key={0} style={{fontSize: 30}}>Keine Events</Text>;
         }
+
         return (
             <View style={this.styles.bigContainer}>
                 <ScrollView contentContainerStyle={this.styles.container} refreshControl={ <RefreshControl refreshing={this.state.refreshing} onRefresh={this.onRefresh}></RefreshControl> }>
