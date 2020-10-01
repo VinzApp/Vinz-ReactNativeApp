@@ -28,7 +28,6 @@ export default class Main extends React.Component {
         this.styles = StyleSheet.create({
             element: {
                 marginTop: 50,
-                height: 200,
                 width: '90%',
                 backgroundColor: '#DFDFDF',
                 borderRadius: 11,
@@ -64,6 +63,10 @@ export default class Main extends React.Component {
         });
     }
 
+    componentDidMount() {
+        this.onRefresh();
+    }
+
     onRefresh = () => {
         this.setState({refreshing: true});
         this.getEvents().then((response) => {
@@ -92,7 +95,7 @@ export default class Main extends React.Component {
                 <ScrollView contentContainerStyle={this.styles.container} refreshControl={ <RefreshControl refreshing={this.state.refreshing} onRefresh={this.onRefresh}></RefreshControl> }>
                     <View style={this.styles.header} />
                     <View style={this.styles.element}>
-                        <Text style={{fontSize: 40}} >Events</Text>
+                        <Text style={{fontSize: 40, marginBottom: 10}} >Events</Text>
                         {textElements}
                     </View>
                     <View style={this.styles.element} />

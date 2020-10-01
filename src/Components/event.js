@@ -14,13 +14,23 @@ export default class Event extends React.Component {
                 resizeMode: 'contain',
                 width: 50,
                 height: 50,
+                marginRight: 10
             },
             container: {
-                flexDirection: 'row'
+                flexDirection: 'row',
+                backgroundColor: 'orange',
+                borderRadius: 11,
+                paddingTop: 7,
+                paddingBottom: 7,
+                paddingLeft: 15,
+                opacity: 0.7,
+                marginBottom: 17 
             },
             text: {
                 fontSize: 30,
-                backgroundColor: 'orange'
+                paddingTop: 5,
+                paddingRight: 9,
+                opacity: 1 
             }
         });
     }
