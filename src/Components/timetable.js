@@ -34,10 +34,10 @@ export default class Timetable extends React.Component {
         }
     }
 
-    componentWillReceiveProps() {
+    UNSAFE_componentWillReceiveProps() {
         this.timetableRequest()
-            .then(() => {
-                this.getTimetable();
+            .then((response) => {
+                this.getTimetable(response);
         });
         console.log('Timetable updated');
     }
@@ -64,21 +64,26 @@ export default class Timetable extends React.Component {
     }
     
 
-    getTimetable() {
+    getTimetable(jsonResponse) {
         const d = new Date();
         const currentTime = this.pad(d.getHours(), 2) + ':' + this.pad(d.getMinutes(), 2);
         // If no timetables are found (mostly on Weekends)
-        if(this.props.timetable[0] == undefined){
+        if(jsonResponse[0] == undefined){
             console.log('No Timetable entries found!');
             return '';
         }
         let i;
-        for(i = 0; i < this.props.timetable.length; i++){
-            if(currentTime > this.props.timetable[i].starttime && currentTime < this.props.timetable[i].endtime){
+        for(i = 0; i < jsonResponse.length; i++){
+            if(currentTime > jsonResponse[i].starttime && currentTime < jsonResponse[i].endtime){
                 break;
             }
         }
-        this.setState({currentSliceEnd: this.props.timetable[i].endtime})
+        if(jsonResponse[i+1] != undefined){
+            this.setState({currentSliceName: jsonResponse[i].name, currentSliceEnd: jsonResponse[i].endtime,
+                futureSliceName: jsonResponse[i+1].name, futureSliceStart: jsonResponse[i+1].starttime, futureSliceEnd: jsonResponse[i+1].endtime});
+        }else{
+            this.setState({currentSliceName: jsonResponse[i].name, currentSliceEnd: jsonResponse[i].endtime });
+        }
     }
 
     pad(n, width, z) {

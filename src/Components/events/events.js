@@ -40,7 +40,7 @@ export default class Events extends React.Component {
         }
     }
      
-    componentWillReceiveProps() {
+    UNSAFE_componentWillReceiveProps() {
         this.eventsRequest()
             .then((response) => {
                 this.getEvents(response);

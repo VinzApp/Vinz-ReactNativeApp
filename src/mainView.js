@@ -65,8 +65,16 @@ export default class Main extends React.Component {
             }
         });
     }
+    componentDidMount(){
+        this.onRefresh();
+        this.requestInterval = setInterval(() => {
+            this.onRefresh();
+        }, 60000);
+    }
 
-    // TODO: create interval and call onRefresh every minute
+    componentWillUnmount(){
+        clearInterval(this.requestInterval);
+    }
 
     onRefresh = () => {
         this.setState({refreshing: true});
