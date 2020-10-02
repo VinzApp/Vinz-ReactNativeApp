@@ -38,16 +38,19 @@ export default class Events extends React.Component {
         this.state = {
             events: <Text key={0} style={{fontSize: 30}}>Keine Events</Text>
         }
-        this.events = <Text key={0} style={{fontSize: 30}}>Keine Events</Text>;
+        this.previousResponse = '';
     }
      
     
     componentDidUpdate() {
         this.eventsRequest()
             .then((response) => {
-                this.getEvents(response);
+                if(JSON.stringify(response) !== this.previousResponse){
+                    this.getEvents(response);
+                }
+                this.previousResponse = JSON.stringify(response);
         });
-        console.log('Events update1');
+        console.log('Events update');
     }
 
     
@@ -69,14 +72,13 @@ export default class Events extends React.Component {
         if(eventElements.length === 0){
             eventElements[0] = <Text key={0} style={{fontSize: 30}}>Keine Events</Text>;
         }
-        //this.setState({events: eventElements});
-        this.events = eventElements;
+        this.setState({events: eventElements});
     }
 
     render(){
         return (
             <View>
-                {this.events}
+                {this.state.events}
             </View>
         );
     }

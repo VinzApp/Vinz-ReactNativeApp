@@ -24,18 +24,23 @@ export default class Timetable extends React.Component {
                 opacity: 1 
             }
         });
-        
-        this.currentSliceName = '';
-        this.currentSliceEnd = '';
-        this.futureSliceName = '';
-        this.futureSliceStart = '';
-        this.futureSliceEnd = '';
+        this.state = {
+            currentSliceName: '',
+            currentSliceEnd: '',
+            futureSliceName: '',
+            futureSliceStart: '',
+            futureSliceEnd: ''
+        } 
+        this.previousResponse
     }
 
     componentDidUpdate() {
         this.timetableRequest()
             .then((response) => {
-                this.getTimetable(response);
+                if(JSON.stringify(response) !== this.previousResponse){
+                    this.getTimetable(response);
+                }
+                this.previousResponse = JSON.stringify(response);
         });
         console.log('Timetable updated');
     }
@@ -77,14 +82,18 @@ export default class Timetable extends React.Component {
             }
         }
         if(jsonResponse[i+1] != undefined){
-            this.currentSliceName = jsonResponse[i].name; 
-            this.currentSliceEnd = jsonResponse[i].endtime;
-            this.futureSliceName = jsonResponse[i+1].name; 
-            this.futureSliceStart = jsonResponse[i+1].starttime; 
-            this.futureSliceEnd = jsonResponse[i+1].endtime;
+            this.setState({
+                currentSliceName: jsonResponse[i].name, 
+                currentSliceEnd: jsonResponse[i].endtime,
+                futureSliceName: jsonResponse[i+1].name, 
+                futureSliceStart: jsonResponse[i+1].starttime, 
+                futureSliceEnd: jsonResponse[i+1].endtime
+            });
         }else{
-            this.currentSliceName = jsonResponse[i].name; 
-            this.currentSliceEnd = jsonResponse[i].endtime;
+            this.setState({
+                currentSliceName: jsonResponse[i].name, 
+                currentSliceEnd: jsonResponse[i].endtime
+            });
         }
     }
 
@@ -97,8 +106,8 @@ export default class Timetable extends React.Component {
     render(){
         return (
             <View style={this.styles.container}>
-                <Text style={this.styles.text}>Jetzt ist {this.currentSliceName} bis {this.currentSliceEnd}</Text>
-                <Text style={this.styles.text}>Danach ist {this.futureSliceName} von {this.futureSliceStart} bis {this.futureSliceEnd}</Text>
+                <Text style={this.styles.text}>Jetzt ist {this.state.currentSliceName} bis {this.state.currentSliceEnd}</Text>
+                <Text style={this.styles.text}>Danach ist {this.state.futureSliceName} von {this.state.futureSliceStart} bis {this.state.futureSliceEnd}</Text>
             </View>
         );
     }
