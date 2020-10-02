@@ -8,7 +8,6 @@ import {
     RefreshControl,
     Text
 } from 'react-native';
-import Event from './Components/events/event';
 import Events from './Components/events/events';
 import Timetable from './Components/timetable';
 
@@ -21,6 +20,8 @@ export default class Main extends React.Component {
             timetableResponse: '',
             refreshing: false
         };
+        this.eventResponse = '';
+        this.timetableResponse = '';;
 
 
         StatusBar.setBackgroundColor('#101115', true);
@@ -65,53 +66,13 @@ export default class Main extends React.Component {
         });
     }
 
-    componentDidMount() {
-        this.requestInterval = setInterval(() => {
-            this.onRefresh(); 
-        }, 60000);
-    }
-    
-    componentWillUnmount() {
-        clearInterval(this.requestInterval);
-    }
-    
+    // TODO: create interval and call onRefresh every minute
 
     onRefresh = () => {
         this.setState({refreshing: true});
-        this.getEvents().then((response) => {
-            this.setState({refreshing: false, eventResponse: response});
-        });
-        this.getTimetable().then((response) => {
-            this.setState({refreshing: false, timetableResponse: response});
-        });
+        this.setState({refreshing: false});
     }
 
-    async getEvents(){
-        let response = await fetch(
-            'http://185.234.72.120:18000/getEvents',
-        );
-        let responseJson = await response.json();
-        return responseJson;
-    }
-
-    async getTimetable(){
-        const dateDay = (new Date()).getDay()-1;
-        const packet = {};
-        // packet['day'] = dateDay.toString();
-        packet['day'] = "3";
-        let response = await fetch(
-            'http://185.234.72.120:18000/todaysTimetable',
-            {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(packet)
-            }
-        );
-        let responseJson = await response.json();
-        return responseJson;
-    }
 
     render() {
         return (
@@ -120,11 +81,11 @@ export default class Main extends React.Component {
                     <View style={this.styles.header} />
                     <View style={this.styles.element}>
                         <Text style={{fontSize: 40, marginBottom: 10}} >Events</Text>
-                        <Events events={this.state.eventResponse}/>
+                        <Events />
                     </View>
                     <View style={this.styles.element}>
                         <Text style={{fontSize: 40, marginBottom: 10}} >Programm</Text>
-                        <Timetable timetable={this.state.timetableResponse}/>
+                        <Timetable />
                     </View>
                     <View style={this.styles.element} />
                     <View style={this.styles.element} />

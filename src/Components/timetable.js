@@ -33,12 +33,38 @@ export default class Timetable extends React.Component {
             futureSliceEnd: ''
         }
     }
-    
-    componentDidUpdate() {
-        this.getSliceInfo();
+
+    componentWillReceiveProps() {
+        this.timetableRequest()
+            .then(() => {
+                this.getTimetable();
+        });
+        console.log('Timetable updated');
+    }
+
+
+    async timetableRequest(){
+        const dateDay = (new Date()).getDay()-1;
+        const packet = {};
+        // TODO: remove testing value
+        // packet['day'] = dateDay.toString();
+        packet['day'] = "3";
+        let response = await fetch(
+            'http://185.234.72.120:18000/todaysTimetable',
+            {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(packet)
+            }
+        );
+        let responseJson = await response.json();
+        return responseJson;
     }
     
-    getSliceInfo() {
+
+    getTimetable() {
         const d = new Date();
         const currentTime = this.pad(d.getHours(), 2) + ':' + this.pad(d.getMinutes(), 2);
         // If no timetables are found (mostly on Weekends)
@@ -52,8 +78,7 @@ export default class Timetable extends React.Component {
                 break;
             }
         }
-        console.log('test');
-        //this.setState({currentSliceEnd: this.props.timetable[i].endtime})
+        this.setState({currentSliceEnd: this.props.timetable[i].endtime})
     }
 
     pad(n, width, z) {

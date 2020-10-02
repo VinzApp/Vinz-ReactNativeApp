@@ -39,16 +39,29 @@ export default class Events extends React.Component {
             events: <Text key={0} style={{fontSize: 30}}>Keine Events</Text>
         }
     }
-
-    componentDidUpdate() {
-        this.getEvents();
+     
+    componentWillReceiveProps() {
+        this.eventsRequest()
+            .then((response) => {
+                this.getEvents(response);
+        });
+        console.log('Events update');
     }
-    
 
-    getEvents() {
+    
+    async eventsRequest(){
+        let response = await fetch(
+            'http://185.234.72.120:18000/getEvents',
+        );
+        let responseJson = await response.json();
+        return responseJson;
+    }
+
+
+    getEvents(jsonResponse) {
         let eventElements = [];
-        for(let i = 0; i < this.props.events.length; i++){
-            eventElements.push(<Event key={i} event={this.props.events[i].text}></Event>);
+        for(let i = 0; i < jsonResponse.length; i++){
+            eventElements.push(<Event key={i} event={jsonResponse[i].text}></Event>);
         }
         // Display error if no Events found
         if(eventElements.length === 0){
@@ -58,8 +71,6 @@ export default class Events extends React.Component {
     }
 
     render(){
-
-
         return (
             <View>
                 {this.state.events}
