@@ -38,14 +38,16 @@ export default class Events extends React.Component {
         this.state = {
             events: <Text key={0} style={{fontSize: 30}}>Keine Events</Text>
         }
+        this.events = <Text key={0} style={{fontSize: 30}}>Keine Events</Text>;
     }
      
-    UNSAFE_componentWillReceiveProps() {
+    
+    componentDidUpdate() {
         this.eventsRequest()
             .then((response) => {
                 this.getEvents(response);
         });
-        console.log('Events update');
+        console.log('Events update1');
     }
 
     
@@ -67,13 +69,14 @@ export default class Events extends React.Component {
         if(eventElements.length === 0){
             eventElements[0] = <Text key={0} style={{fontSize: 30}}>Keine Events</Text>;
         }
-        this.setState({events: eventElements});
+        //this.setState({events: eventElements});
+        this.events = eventElements;
     }
 
     render(){
         return (
             <View>
-                {this.state.events}
+                {this.events}
             </View>
         );
     }

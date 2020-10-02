@@ -25,16 +25,14 @@ export default class Timetable extends React.Component {
             }
         });
         
-        this.state = {
-            currentSliceName: '',
-            currentSliceEnd: '',
-            futureSliceName: '',
-            futureSliceStart: '',
-            futureSliceEnd: ''
-        }
+        this.currentSliceName = '';
+        this.currentSliceEnd = '';
+        this.futureSliceName = '';
+        this.futureSliceStart = '';
+        this.futureSliceEnd = '';
     }
 
-    UNSAFE_componentWillReceiveProps() {
+    componentDidUpdate() {
         this.timetableRequest()
             .then((response) => {
                 this.getTimetable(response);
@@ -79,10 +77,14 @@ export default class Timetable extends React.Component {
             }
         }
         if(jsonResponse[i+1] != undefined){
-            this.setState({currentSliceName: jsonResponse[i].name, currentSliceEnd: jsonResponse[i].endtime,
-                futureSliceName: jsonResponse[i+1].name, futureSliceStart: jsonResponse[i+1].starttime, futureSliceEnd: jsonResponse[i+1].endtime});
+            this.currentSliceName = jsonResponse[i].name; 
+            this.currentSliceEnd = jsonResponse[i].endtime;
+            this.futureSliceName = jsonResponse[i+1].name; 
+            this.futureSliceStart = jsonResponse[i+1].starttime; 
+            this.futureSliceEnd = jsonResponse[i+1].endtime;
         }else{
-            this.setState({currentSliceName: jsonResponse[i].name, currentSliceEnd: jsonResponse[i].endtime });
+            this.currentSliceName = jsonResponse[i].name; 
+            this.currentSliceEnd = jsonResponse[i].endtime;
         }
     }
 
@@ -95,8 +97,8 @@ export default class Timetable extends React.Component {
     render(){
         return (
             <View style={this.styles.container}>
-                <Text style={this.styles.text}>Jetzt ist {this.state.currentSliceName} bis {this.state.currentSliceEnd}</Text>
-                <Text style={this.styles.text}>Danach ist {this.state.futureSliceName} von {this.state.futureSliceStart} bis {this.state.futureSliceEnd}</Text>
+                <Text style={this.styles.text}>Jetzt ist {this.currentSliceName} bis {this.currentSliceEnd}</Text>
+                <Text style={this.styles.text}>Danach ist {this.futureSliceName} von {this.futureSliceStart} bis {this.futureSliceEnd}</Text>
             </View>
         );
     }

@@ -16,13 +16,8 @@ export default class Main extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            eventResponse: '',
-            timetableResponse: '',
             refreshing: false
         };
-        this.eventResponse = '';
-        this.timetableResponse = '';;
-
 
         StatusBar.setBackgroundColor('#101115', true);
         StatusBar.setBarStyle('light-content');
