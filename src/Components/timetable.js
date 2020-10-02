@@ -26,21 +26,34 @@ export default class Timetable extends React.Component {
         });
         
         this.state = {
-
+            currentSliceName: '',
+            currentSliceEnd: '',
+            futureSliceName: '',
+            futureSliceStart: '',
+            futureSliceEnd: ''
         }
     }
-
+    
+    componentDidUpdate() {
+        this.getSliceInfo();
+    }
+    
     getSliceInfo() {
         const d = new Date();
         const currentTime = this.pad(d.getHours(), 2) + ':' + this.pad(d.getMinutes(), 2);
+        // If no timetables are found (mostly on Weekends)
+        if(this.props.timetable[0] == undefined){
+            console.log('No Timetable entries found!');
+            return '';
+        }
         let i;
-        console.log(this.props.timetable.length);
         for(i = 0; i < this.props.timetable.length; i++){
             if(currentTime > this.props.timetable[i].starttime && currentTime < this.props.timetable[i].endtime){
-                console.log(this.props.timetable[i]);
+                break;
             }
         }
-        return;
+        console.log('test');
+        //this.setState({currentSliceEnd: this.props.timetable[i].endtime})
     }
 
     pad(n, width, z) {
@@ -52,8 +65,8 @@ export default class Timetable extends React.Component {
     render(){
         return (
             <View style={this.styles.container}>
-                <Text style={this.styles.text}>Jetzt ist {this.getSliceInfo()} bis {this.state.currentSliceEnd}</Text>
-                <Text style={this.styles.text}>Danach ist {this.state.futureSlice} von {this.state.futureSliceStart} bis {this.state.futureSliceEnd}</Text>
+                <Text style={this.styles.text}>Jetzt ist {this.state.currentSliceName} bis {this.state.currentSliceEnd}</Text>
+                <Text style={this.styles.text}>Danach ist {this.state.futureSliceName} von {this.state.futureSliceStart} bis {this.state.futureSliceEnd}</Text>
             </View>
         );
     }

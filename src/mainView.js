@@ -1,5 +1,4 @@
 import React from 'react';
-import { render } from 'react-dom';
 import { 
     StyleSheet, 
     Image,
@@ -9,7 +8,8 @@ import {
     RefreshControl,
     Text
 } from 'react-native';
-import Event from './Components/event';
+import Event from './Components/events/event';
+import Events from './Components/events/events';
 import Timetable from './Components/timetable';
 
 export default class Main extends React.Component {
@@ -66,8 +66,15 @@ export default class Main extends React.Component {
     }
 
     componentDidMount() {
-        this.onRefresh();
+        this.requestInterval = setInterval(() => {
+            this.onRefresh(); 
+        }, 60000);
     }
+    
+    componentWillUnmount() {
+        clearInterval(this.requestInterval);
+    }
+    
 
     onRefresh = () => {
         this.setState({refreshing: true});
@@ -90,7 +97,8 @@ export default class Main extends React.Component {
     async getTimetable(){
         const dateDay = (new Date()).getDay()-1;
         const packet = {};
-        packet['day'] = dateDay.toString();
+        // packet['day'] = dateDay.toString();
+        packet['day'] = "3";
         let response = await fetch(
             'http://185.234.72.120:18000/todaysTimetable',
             {
@@ -106,23 +114,13 @@ export default class Main extends React.Component {
     }
 
     render() {
-        // Generate event Components
-        let eventElements = [];
-        for(let i = 0; i < this.state.eventResponse.length; i++){
-            eventElements.push(<Event key={i} event={this.state.eventResponse[i].text}></Event>);
-        }
-        // Display error if no Events found
-        if(eventElements.length === 0){
-            eventElements[0] = <Text key={0} style={{fontSize: 30}}>Keine Events</Text>;
-        }
-
         return (
             <View style={this.styles.bigContainer}>
                 <ScrollView contentContainerStyle={this.styles.container} refreshControl={ <RefreshControl refreshing={this.state.refreshing} onRefresh={this.onRefresh}></RefreshControl> }>
                     <View style={this.styles.header} />
                     <View style={this.styles.element}>
                         <Text style={{fontSize: 40, marginBottom: 10}} >Events</Text>
-                        {eventElements}
+                        <Events events={this.state.eventResponse}/>
                     </View>
                     <View style={this.styles.element}>
                         <Text style={{fontSize: 40, marginBottom: 10}} >Programm</Text>

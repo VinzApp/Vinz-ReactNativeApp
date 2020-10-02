@@ -36,11 +36,13 @@ export default class Event extends React.Component {
     }
 
     render(){
+
+
         return (
             <View style={this.styles.container}>
                 <Image 
                     style={this.styles.image}
-                    source={require('../assets/warning.png')}
+                    source={require('../../assets/warning.png')}
                 />
                 <Text style={this.styles.text}>{this.props.event}</Text>
             </View>
