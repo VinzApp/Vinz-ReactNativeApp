@@ -81,6 +81,7 @@ export default class Timetable extends React.Component {
                 break;
             }
         }
+
         if(jsonResponse[i+1] != undefined){
             this.setState({
                 currentSliceName: jsonResponse[i].name, 
