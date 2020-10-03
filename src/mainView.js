@@ -9,7 +9,8 @@ import {
     Text
 } from 'react-native';
 import Events from './Components/events/events';
-import Timetable from './Components/timetable';
+import Timetable from './Components/timetable/timetable';
+import Registration from './Components/registration/registration';
 
 export default class Main extends React.Component {
 
@@ -90,7 +91,10 @@ export default class Main extends React.Component {
                         <Text style={{fontSize: 40, marginBottom: 10}} >Programm</Text>
                         <Timetable />
                     </View>
-                    <View style={this.styles.element} />
+                    <View style={this.styles.element}>
+                        <Text style={{fontSize: 40, marginBottom: 10}} >Anmeldung</Text>
+                        <Registration />
+                    </View>
                     <View style={this.styles.element} />
                     <View style={this.styles.element} />
                     <View style={this.styles.element} />

@@ -49,9 +49,7 @@ export default class Timetable extends React.Component {
     async timetableRequest(){
         const dateDay = (new Date()).getDay()-1;
         const packet = {};
-        // TODO: remove testing value
-        // packet['day'] = dateDay.toString();
-        packet['day'] = "3";
+        packet['day'] = dateDay.toString();
         let response = await fetch(
             'http://185.234.72.120:18000/todaysTimetable',
             {
